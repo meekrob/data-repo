@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# initialize or evaluate a data directory
-# I used https://chatgpt.com/share/68bf18fe-4a58-8010-b51c-38d190d80829
-#!/usr/bin/env bash
 #
 # Usage: datadir [options] file[s]
 #
@@ -78,7 +75,7 @@ esac
 # Set timestamp
 timestamp=$(date +"%Y-%m-%d-%H-%M")
 
-# Determine destination
+# Determine destination directory
 if [[ -n "$name" ]]; then
     destination="${name}-${timestamp}"
 else
@@ -95,6 +92,10 @@ if [[ ! -d "$destination" ]]; then
     mkdir -p "$destination"
 fi
 
+# Initialize file list
+filelist="${destination}/${name}.filelist.txt"
+echo -e "Filename\tSize\tCreationDate" > "$filelist"
+
 # Process files
 for f in "${files[@]}"; do
     if [[ ! -e "$f" ]]; then
@@ -104,23 +105,31 @@ for f in "${files[@]}"; do
 
     case "$move_method" in
         mv)
-            echo "Moving $f -> $destination/"
             mv "$f" "$destination/"
             ;;
         cp)
-            echo "Copying $f -> $destination/"
             cp "$f" "$destination/"
             ;;
         hardlink)
-            echo "Hardlinking $f -> $destination/"
             ln "$f" "$destination/"
             ;;
         softlink)
-            echo "Symlinking $f -> $destination/"
             ln -s "$(realpath "$f")" "$destination/"
             ;;
     esac
+
+    # Determine path in destination
+    destfile="$destination/$(basename "$f")"
+
+    # Get human-readable size
+    if [[ -f "$destfile" || -L "$destfile" ]]; then
+        size=$(du -h "$destfile" | cut -f1)
+        # Use the file's creation/modification date
+        cdate=$(stat -c "%y" "$destfile" 2>/dev/null || stat -f "%Sm" "$destfile")  # Linux or Mac
+        echo -e "$(basename "$f")\t$size\t$cdate" >> "$filelist"
+    fi
 done
 
 echo "Done. Files are in: $destination"
+echo "File list created: $filelist"
 
