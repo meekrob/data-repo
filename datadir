@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# initialize or evaluate a data directory
+set -euo pipefail
+
+SCRIPTNAME=$(basename $0)
+
+# Defaults
+name=""
+destination="."
+move_method="hardlink"
+
+show_help() {
+    cat << EOF
+Usage: "$SCRIPTNAME" [options] file[s]
+
+Options:
+  -h, --help            Show this help message and exit
+  -n, --name NAME       Name to use for the operation (default: "$name")
+  -d, --destination DIR Destination directory (default: "$destination")
+  -m, --move-method M   Move method: mv, cp, hardlink, softlink (default: "$move_method")
+EOF
+}
+
+# Parse arguments
+files=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -n|--name)
+            name="$2"
+            shift 2
+            ;;
+        -d|--destination)
+            destination="$2"
+            shift 2
+            ;;
+        -m|--move-method)
+            move_method="$2"
+            shift 2
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            show_help
+            exit 1
+            ;;
+        *)
+            files+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Check required arguments
+if [[ ${#files[@]} -eq 0 ]]; then
+    echo "Error: No input files provided" >&2
+    show_help
+    exit 1
+fi
+
+# Debug output (replace with your logic)
+echo "Name:        $name"
+echo "Destination: $destination"
+echo "Move method: $move_method"
+echo "Files:       ${files[*]}"
+
