@@ -9,6 +9,7 @@ name=""
 destination="."
 move_method="hardlink"
 
+# https://chatgpt.com/share/68bf18fe-4a58-8010-b51c-38d190d80829
 show_help() {
     cat << EOF
 Usage: "$SCRIPTNAME" [options] file[s]
