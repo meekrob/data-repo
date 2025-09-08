@@ -135,5 +135,7 @@ echo "File list created: $filelist"
 
 # variables for use in other scripts
 echo "NAME=$name" >> repo.rc
-echo "DEST_ABSPATH=$(readlink -f $destination)" >> repo.rc
-echo "FILELIST_ABSPATH=$(readlink -f $filelist)" >> repo.rc
+DEST_ABS=$(cd "$destination" && pwd)
+FILELIST_ABS=$(cd "$(dirname "$filelist")" && echo "$(pwd)/$(basename "$filelist")")
+echo "DEST_ABSPATH=\"$DEST_ABS\"" >> repo.rc
+echo "FILELIST_ABSPATH=\"$FILELIST_ABS\"" >> repo.rc
