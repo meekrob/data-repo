@@ -139,3 +139,22 @@ DEST_ABS=$(cd "$destination" && pwd)
 FILELIST_ABS=$(cd "$(dirname "$filelist")" && echo "$(pwd)/$(basename "$filelist")")
 echo "DEST_ABSPATH=\"$DEST_ABS\"" >> repo.rc
 echo "FILELIST_ABSPATH=\"$FILELIST_ABS\"" >> repo.rc
+
+# time to write utility scripts
+SLURM_MD5_ARRAY_PATH=scripts/slurm-md5-array
+mkdir -p $SLURM_MD5_ARRAY_PATH
+
+
+# launch script
+md5_filename=${FILELIST_ABS/.filelist.txt/.filelist.md5}
+cat << "EOF" > "$SLURM_MD5_ARRAY_PATH/launch-pipeline.sh"
+#!/usr/bin/env bash
+set -euo pipefail
+outfile=$md5_filename
+nfiles=\$(grep -v Filename $filelist | wc -l)
+filelist=\$(grep -v Filename $filelist | cut -f 1)
+main_jid=\$(sbatch --parsable --array=1-\$nfiles scripts/slurm-md5-array/md5sum-array.sbatch \$filelist)
+sbatch --dependency=afterok:\$main_jid scripts/slurm-md5-array/concat-md5.sbatch \$outfile
+EOF 
+
+echo "some shit"
