@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # initialize or evaluate a data directory
+# I used https://chatgpt.com/share/68bf18fe-4a58-8010-b51c-38d190d80829
 set -euo pipefail
 
 SCRIPTNAME=$(basename $0)
@@ -9,7 +10,6 @@ name=""
 destination="."
 move_method="hardlink"
 
-# https://chatgpt.com/share/68bf18fe-4a58-8010-b51c-38d190d80829
 show_help() {
     cat << EOF
 Usage: "$SCRIPTNAME" [options] file[s]
