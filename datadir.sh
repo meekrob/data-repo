@@ -133,3 +133,7 @@ done
 echo "Done. Files are in: $destination"
 echo "File list created: $filelist"
 
+# variables for use in other scripts
+echo "NAME=$name" >> repo.rc
+echo "DEST_ABSPATH=$(readlink -f $destination)" >> repo.rc
+echo "FILELIST_ABSPATH=$(readlink -f $filelist)" >> repo.rc
