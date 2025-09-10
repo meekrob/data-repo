@@ -5,6 +5,8 @@
 
 set -euo pipefail
 
+log_command="$@"
+
 # Defaults
 name=""
 destination=""
@@ -145,7 +147,7 @@ SLURM_MD5_ARRAY_PATH=scripts/slurm-md5-array
 mkdir -p $SLURM_MD5_ARRAY_PATH
 
 
-# launch script
+# create the md5 launch script
 md5_filename=${FILELIST_ABS/.filelist.txt/.filelist.md5}
 cat << "EOF" > "$SLURM_MD5_ARRAY_PATH/launch-pipeline.sh"
 #!/usr/bin/env bash
@@ -157,4 +159,6 @@ main_jid=\$(sbatch --parsable --array=1-\$nfiles scripts/slurm-md5-array/md5sum-
 sbatch --dependency=afterok:\$main_jid scripts/slurm-md5-array/concat-md5.sbatch \$outfile
 EOF 
 
-echo "some shit"
+# add (or create) README 
+echo "$(date): Data repo $name initialized with:" >> README
+echo "$log_command" >> README
