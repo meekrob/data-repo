@@ -11,19 +11,19 @@ This can be run within a pre-existing analysis project directory, or be part of 
 public or user-generated.
 
 ## Installation
+
 ```
 $ git clone this repository
 $ cd repository
 $ bash install.sh
 ```
 Will prompt for choice from your PATH. 
-Then run
+Then run:
 
 ```
 $ init-data-repo 
 Error: No input files provided
 Usage: datadir [options] file[s]
-```
 
 Options:
   -h, --help            Show this help message and exit
