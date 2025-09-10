@@ -77,6 +77,7 @@ then
 else
     select_writeable_path         # sets global variable INSTALL_PATH
     echo "Selected $INSTALL_PATH"   # <- this is the global variable
+    echo $INSTALL_PATH > $INSTALL_PATH_FILE
 fi
 
 
