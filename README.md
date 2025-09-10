@@ -14,15 +14,20 @@ public or user-generated.
 
 I want create a data repo of files I downloaded from SRA.
 
-
-
 ```
+init-data-repo --move-method mv --name pacBio_dataset *.fastq.gz
+```
+
+This attaches a date to the provided name (pacBio_dataset) and moves `*.fastq.gz` into the created directory.  
+It creates `pacBio_dataset.filelist.txt`, which the slurm scripts use to run md5sum on each file individually, merging the result into `pacBio_dataset.filelist.md5` 
+
+A README is created which starts you off with a report of the command which initialized the data repo.  
+```
+pacBio_dataset-2025-09-08-14-37/
 ├── pacBio_dataset.filelist.md5
 ├── pacBio_dataset.filelist.txt
-├── projects
-│   └── pacBio_dataset_assembly -> /nfs/home/dking/pacBio_dataset
 ├── README
-├── scripts
+├── data-repo-scripts
 │   └── slurm-md5-array
 │       ├── concat-md5.sbatch
 │       ├── launch-md5sum.sh
@@ -38,30 +43,7 @@ I want create a data repo of files I downloaded from SRA.
 ├── SRR...098.fastq.gz
 ├── SRR...099.fastq.gz
 ├── SRR...100.fastq.gz
-├── SRR...101.fastq.gz
-├── SRR...102.fastq.gz
-├── SRR...103.fastq.gz
-├── SRR...104.fastq.gz
-├── SRR...105.fastq.gz
-├── SRR...106.fastq.gz
-├── SRR...107.fastq.gz
-├── SRR...108.fastq.gz
-├── SRR...109.fastq.gz
-├── SRR...110.fastq.gz
-├── SRR...111.fastq.gz
-├── SRR...112.fastq.gz
-├── SRR...113.fastq.gz
-├── SRR...114.fastq.gz
-├── SRR...115.fastq.gz
-├── SRR...116.fastq.gz
-├── SRR...117.fastq.gz
-├── SRR...118.fastq.gz
-├── SRR...119.fastq.gz
-├── SRR...120.fastq.gz
-├── SRR...121.fastq.gz
-├── SRR...122.fastq.gz
-├── SRR...123.fastq.gz
-├── SRR...124.fastq.gz
+  ...
 ├── SRR_Acc_List.txt
 
 ```
