@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -eu -o pipefail
+
 INSTALL_PATH_FILE="INSTALL.PATH"
 SRC="datadir.sh"
 TARGET="init-data-repo"
@@ -51,14 +53,14 @@ select_writeable_path() {
 if [ -e "$INSTALL_PATH_FILE" ]
 then
     preexisting_path=$(cat $INSTALL_PATH_FILE) 
-    if [ -n -w "$preexisting_path" ]
+    if [ ! -w "$preexisting_path" ]
     then 
         echo "$INSTALL_PATH_FILE lists $preexisting_path as your install location. Do you wish to change it?"
         while read -p "Change install path? [(Yyes|Nno)]: " user_continue
         do
             case "$user_continue" in
                 [Yy]|[Yy][Ee][Ss])
-                    select_writeable_path()         # sets global variable INSTALL_PATH
+                    select_writeable_path         # sets global variable INSTALL_PATH
                     echo "Selected $INSTALL_PATH"   # <- this is the global variable
                     cat $INSTALL_PATH_FILE >> .old.$INSTALL_PATH_FILE
                     rm $INSTALL_PATH_FILE 
@@ -72,6 +74,15 @@ then
             esac
         done
     fi
+else
+    select_writeable_path         # sets global variable INSTALL_PATH
+    echo "Selected $INSTALL_PATH"   # <- this is the global variable
 fi
 
+
+if [ -z "$INSTALL_PATH" ]
+then 
+    echo "Failed to set \$INSTALL_PATH (zero length)." 1>&2
+    exit 1
+fi
 cp -v $SRC $INSTALL_PATH/$TARGET && chmod 755 $INSTALL_PATH/$TARGET
