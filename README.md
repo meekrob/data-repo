@@ -10,6 +10,29 @@ Automation of tasks is simplistic: starting with a file or set of files,
 This can be run within a pre-existing analysis project directory, or be part of a data-repo This is of particular interest when managing several sources of data, 
 public or user-generated.
 
+## Installation
+```
+$ git clone this repository
+$ cd repository
+$ bash install.sh
+```
+Will prompt for choice from your PATH. 
+Then run
+
+```
+$ init-data-repo 
+Error: No input files provided
+Usage: datadir [options] file[s]
+```
+
+Options:
+  -h, --help            Show this help message and exit
+  -n, --name NAME       Name to use for the operation (overrides destination)
+  -d, --destination DIR Destination directory (ignored if --name is set)
+  -m, --move-method M   Move method: mv, cp, hardlink, softlink (default: "cp")
+```
+
+
 ## Example usage
 
 I want create a data repo of files I downloaded from SRA.
