@@ -52,14 +52,17 @@ select_writeable_path() {
 
 if [ -e "$INSTALL_PATH_FILE" ]
 then
-    preexisting_path=$(cat $INSTALL_PATH_FILE) 
-    if [ ! -w "$preexisting_path" ]
+    echo -n "Reading INSTALL_PATH_FILE:$INSTALL_PATH_FILE: "
+    pre_existing_path=$(cat $INSTALL_PATH_FILE) 
+    echo $pre_existing_path
+
+    if [ -w "$pre_existing_path" ]
     then 
-        echo "$INSTALL_PATH_FILE lists $preexisting_path as your install location. Do you wish to change it?"
-        while read -p "Change install path? [(Yyes|Nno)]: " user_continue
+        echo "$INSTALL_PATH_FILE lists $pre_existing_path as your install location. Do you wish to change it?"
+        while read -p "Change install path? [y|n]: " user_continue
         do
             case "$user_continue" in
-                [Yy]|[Yy][Ee][Ss])
+                [Yy])
                     select_writeable_path         # sets global variable INSTALL_PATH
                     echo "Selected $INSTALL_PATH"   # <- this is the global variable
                     cat $INSTALL_PATH_FILE >> .old.$INSTALL_PATH_FILE
@@ -67,9 +70,10 @@ then
                     echo $INSTALL_PATH > $INSTALL_PATH_FILE
                     break
                     ;;
-                [Nn]|[Nn][Oo])
-                    INSTALL_PATH="$preexisting_path"
+                [Nn])
+                    INSTALL_PATH="$pre_existing_path"
                     echo "OK, keeping current setting: $INSTALL_PATH"
+                    break
                     ;;
             esac
         done
@@ -86,4 +90,11 @@ then
     echo "Failed to set \$INSTALL_PATH (zero length)." 1>&2
     exit 1
 fi
-cp -v $SRC $INSTALL_PATH/$TARGET && chmod 755 $INSTALL_PATH/$TARGET
+
+TARGET_PATH="$INSTALL_PATH/$TARGET"
+if [ -e "$TARGET_PATH" ] && [ "$SRC" -nt "$TARGET_PATH" ]
+then
+    cp -v $SRC "$TARGET_PATH" && chmod 755 "$TARGET_PATH"
+else
+    echo "Source is not newer than Destination. Nothing done."
+fi
