@@ -2,7 +2,7 @@
 set -eu -o pipefail
 
 INSTALL_PATH_FILE="INSTALL.PATH"
-SRC="datadir.sh"
+SRC="init-data-repo.sh"
 TARGET="init-data-repo"
 
 # treat this as a global to be set in the subfunction
