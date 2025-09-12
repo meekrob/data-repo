@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-shopt -s extglob # for matching one-or-two characters 
+
 # Use this script to advance data versions.
 # It assumes the existence of files created by data-repo,
 # including:
