@@ -11,7 +11,8 @@ set -euo pipefail
 # version template tr
 VERSION_DATE_FMT="+%Y-%m-%d-%H-%M"
 TIMESTAMP=$(date ${VERSION_DATE_FMT})
-VERSION_TEMPLATE_STR="v%02d-%s" # two-digit version number and date string
+FIELD_WIDTH=1
+VERSION_TEMPLATE_STR="v%0${FIELD_WIDTH}d" # for printf: version number and date string
 
 # extended patterns to extract the version number
 SED_E_DELIM_PAT='s/.*(-v[0-9]+-).*/\1/' # group match outside of (-v03-)
@@ -56,7 +57,9 @@ else
 
 fi
 FILE_MOD_TIME=$(get_file_mod_time $fname)
-new_filename=$base-$(printf "$VERSION_TEMPLATE_STR" $next_version $FILE_MOD_TIME)
+#new_filename=$base-$(printf "$VERSION_TEMPLATE_STR" $next_version $FILE_MOD_TIME)
+next_version=$(printf "$VERSION_TEMPLATE_STR" $next_version)
+new_filename=${file_wo_ext}.$next_version$file_ext
 echo "Next version filename: $new_filename"
 
 
