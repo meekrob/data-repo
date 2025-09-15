@@ -46,6 +46,6 @@ workflow {
 
     md5_files_channel = MD5.out.file_md5.flatten()
 
-    CONCAT(md5_files_channel)
+    CONCAT(md5_files_channel.collect())
 }
 
